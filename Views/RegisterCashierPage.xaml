@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BakeryPay.Mobile.Views.RegisterCashierPage"
+             Title="Registro de cajera">
+    <ScrollView>
+        <VerticalStackLayout Padding="20,26,20,34" Spacing="18">
+            <Frame Style="{StaticResource CardFrame}"
+                   Padding="22">
+                <VerticalStackLayout Spacing="18">
+                    <Image Source="panaderia_mary_logo.png"
+                           HeightRequest="110"
+                           Aspect="AspectFit"
+                           HorizontalOptions="Center" />
+                    <Label Text="Registro de cajera"
+                           Style="{StaticResource HeadlineLabel}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Text="Este acceso es solo para personal financiero. Los proveedores son creados por la panificadora y el administrador se configura internamente."
+                           Style="{StaticResource SectionSubtitleLabel}"
+                           HorizontalTextAlignment="Center" />
+
+                    <VerticalStackLayout Spacing="14">
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Nombres" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Nombres" Text="{Binding FirstName}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Apellidos" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Apellidos" Text="{Binding LastName}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Identificacion" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Identificacion" Text="{Binding IdentificationNumber}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Correo" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Correo" Keyboard="Email" Text="{Binding Email}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Telefono" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Telefono" Keyboard="Telephone" Text="{Binding Phone}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Clave" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Clave" IsPassword="True" Text="{Binding Password}" />
+                        <HorizontalStackLayout Spacing="0">
+                            <Label Text="Confirmar clave" FontAttributes="Bold" />
+                            <Label Style="{StaticResource RequiredAsteriskLabel}" />
+                        </HorizontalStackLayout>
+                        <Entry Placeholder="Confirmar clave" IsPassword="True" Text="{Binding ConfirmPassword}" />
+                        <HorizontalStackLayout Spacing="10">
+                            <CheckBox IsChecked="{Binding AcceptPolicies}" />
+                            <Label Text="Acepto el uso de mis datos para acceso, trazabilidad y notificaciones del sistema."
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Fill"
+                                   LineBreakMode="WordWrap" />
+                        </HorizontalStackLayout>
+                        <Button Text="Crear cuenta"
+                                Style="{StaticResource PrimaryAccentButtonStyle}"
+                                Command="{Binding RegisterCommand}" />
+                        <Button Text="Volver al ingreso"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Command="{Binding BackToLoginCommand}" />
+                        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+                        <Label Text="{Binding Message}" TextColor="{StaticResource PrimaryDark}" />
+                        <Label Text="* Campo obligatorio"
+                               FontSize="12"
+                               TextColor="{StaticResource Danger}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
