@@ -31,6 +31,17 @@
                         </VerticalStackLayout>
                     </Frame>
 
+                    <Frame Style="{StaticResource CardFrame}"
+                           BackgroundColor="{StaticResource Surface}"
+                           Margin="0"
+                           Padding="16">
+                        <VerticalStackLayout Spacing="12">
+                            <Label Text="Acceso protegido" FontAttributes="Bold" />
+                            <Label Text="Aqui puedes administrar el registro biometrico del dispositivo y actualizar tu clave de acceso."
+                                   TextColor="{StaticResource TextMuted}" />
+                        </VerticalStackLayout>
+                    </Frame>
+
                     <Button Text="Cambiar mi clave"
                             Style="{StaticResource SecondaryButtonStyle}"
                             Command="{Binding OpenChangePasswordCommand}" />
