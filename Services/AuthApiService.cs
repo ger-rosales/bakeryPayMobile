@@ -37,13 +37,17 @@ public class AuthApiService : BaseApiService
             password
         });
 
-    public Task<ApiEnvelope<AuthSession>?> BiometricLoginAsync(string email, string deviceId, int biometricType) =>
+    public Task<ApiEnvelope<AuthSession>?> BiometricLoginAsync(string email, string deviceId, string deviceSecret, int biometricType) =>
         PostAsync<object, ApiEnvelope<AuthSession>>("api/auth/biometric-login", new
         {
             email,
             deviceId,
+            deviceSecret,
             biometricType
         });
+
+    public Task<ApiEnvelope<AuthSession>?> FacialLoginAsync(string email, string imageBase64) =>
+        PostAsync<object, ApiEnvelope<AuthSession>>("api/auth/facial-login", new { email, imageBase64 });
 
     public Task<ApiEnvelope<AuthSession>?> ChangePasswordAsync(
         string currentPassword,
@@ -60,12 +64,17 @@ public class AuthApiService : BaseApiService
         string deviceId,
         string deviceName,
         string platform,
+        string deviceSecret,
         int biometricType) =>
         PostAsync<object, ApiEnvelope<AuthSession>>("api/auth/register-biometric", new
         {
             deviceId,
             deviceName,
             platform,
+            deviceSecret,
             biometricType
         });
+
+    public Task<ApiEnvelope<AuthSession>?> RegisterFacialAsync(string imageBase64) =>
+        PostAsync<object, ApiEnvelope<AuthSession>>("api/auth/register-facial", new { imageBase64 });
 }

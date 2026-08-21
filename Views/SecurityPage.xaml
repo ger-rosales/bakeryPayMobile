@@ -7,7 +7,7 @@
         <VerticalStackLayout Padding="20,18,20,34" Spacing="18">
             <VerticalStackLayout Spacing="4">
                 <Label Text="Seguridad" Style="{StaticResource SectionTitleLabel}" />
-                <Label Text="Administra tu acceso, clave y registro biometrico del dispositivo."
+                <Label Text="Administra tu acceso, huella, rostro y clave."
                        Style="{StaticResource SectionSubtitleLabel}" />
             </VerticalStackLayout>
 
@@ -19,13 +19,28 @@
                     </VerticalStackLayout>
 
                     <Frame Style="{StaticResource CardFrame}"
+                           BackgroundColor="{StaticResource Surface}"
+                           Margin="0"
+                           Padding="16">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Huella del dispositivo" FontAttributes="Bold" />
+                            <Label Text="Android valida la huella dentro del sensor. BakeryPay solo vincula este dispositivo y no recibe la imagen dactilar."
+                                   TextColor="{StaticResource TextMuted}" />
+                            <Button Text="Registrar huella del dispositivo"
+                                    AutomationId="RegisterFingerprintButton"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding RegisterDeviceBiometricCommand}" />
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame Style="{StaticResource CardFrame}"
                            BackgroundColor="{StaticResource Accent}"
                            Margin="0"
                            Padding="16">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="Acceso biometrico" FontAttributes="Bold" />
+                            <Label Text="Acceso facial" FontAttributes="Bold" />
                             <Label Text="{Binding BiometricStatus}" TextColor="{StaticResource TextMuted}" />
-                            <Button Text="Registrar biometria en este dispositivo"
+                            <Button Text="{Binding FacialActionText}"
                                     Style="{StaticResource PrimaryAccentButtonStyle}"
                                     Command="{Binding RegisterBiometricCommand}" />
                         </VerticalStackLayout>

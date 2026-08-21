@@ -3,6 +3,7 @@ namespace BakeryPay.Mobile.Services;
 public class DeviceInstallationService
 {
     private const string DeviceIdKey = "bakerypay_device_id";
+    private const string DeviceSecretKey = "bakerypay_device_secret";
 
     public async Task<string> GetOrCreateDeviceIdAsync()
     {
@@ -23,6 +24,19 @@ public class DeviceInstallationService
         Preferences.Default.Set(DeviceIdKey, currentDeviceId);
         await TrySetSecureValueAsync(DeviceIdKey, currentDeviceId);
         return currentDeviceId;
+    }
+
+    public async Task<string> GetOrCreateDeviceSecretAsync()
+    {
+        var currentSecret = await TryGetSecureValueAsync(DeviceSecretKey);
+        if (!string.IsNullOrWhiteSpace(currentSecret))
+        {
+            return currentSecret;
+        }
+
+        currentSecret = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
+        await SecureStorage.Default.SetAsync(DeviceSecretKey, currentSecret);
+        return currentSecret;
     }
 
     private static async Task<string?> TryGetSecureValueAsync(string key)

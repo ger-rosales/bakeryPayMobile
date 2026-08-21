@@ -17,4 +17,5 @@ public class AuthSession
     public bool BiometricEnabled { get; set; }
     public bool HasAcceptedPolicies { get; set; }
     public bool MustChangePassword { get; set; }
+    public decimal? FacialSimilarityPercent { get; set; }
 }

@@ -32,6 +32,7 @@
                           ContentTemplate="{DataTemplate views:DashboardPage}" />
         </Tab>
         <Tab x:Name="PaymentsTab"
+             AutomationId="PaymentsTab"
              Route="payments-tab"
              Title="Pagos"
              Icon="tab_payments.png">

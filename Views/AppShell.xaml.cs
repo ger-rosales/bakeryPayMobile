@@ -18,6 +18,7 @@ public partial class AppShell : Shell
         _logoutToolbarItem = new ToolbarItem
         {
             Text = "Salir",
+            AutomationId = "LogoutButton",
             Order = ToolbarItemOrder.Primary,
             Priority = 0
         };

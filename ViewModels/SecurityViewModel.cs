@@ -14,6 +14,7 @@ public class SecurityViewModel : BaseViewModel
     private string _message = string.Empty;
     private string _biometricStatus = "Biometria no registrada";
     private bool _isBiometricRegistered;
+    private string _facialActionText = "Registrar reconocimiento facial";
 
     public SecurityViewModel(
         AuthApiService authApiService,
@@ -27,6 +28,7 @@ public class SecurityViewModel : BaseViewModel
         _biometricService = biometricService;
 
         Title = "Seguridad";
+        RegisterDeviceBiometricCommand = new AsyncCommand(RegisterDeviceBiometricAsync);
         RegisterBiometricCommand = new AsyncCommand(RegisterBiometricAsync);
         OpenChangePasswordCommand = new AsyncCommand(OpenChangePasswordAsync);
     }
@@ -61,6 +63,13 @@ public class SecurityViewModel : BaseViewModel
         set => SetProperty(ref _isBiometricRegistered, value);
     }
 
+    public string FacialActionText
+    {
+        get => _facialActionText;
+        set => SetProperty(ref _facialActionText, value);
+    }
+
+    public AsyncCommand RegisterDeviceBiometricCommand { get; }
     public AsyncCommand RegisterBiometricCommand { get; }
     public AsyncCommand OpenChangePasswordCommand { get; }
 
@@ -79,6 +88,9 @@ public class SecurityViewModel : BaseViewModel
         BiometricStatus = session.BiometricEnabled
             ? "Biometria registrada para este dispositivo"
             : "Biometria no registrada";
+        FacialActionText = session.BiometricEnabled
+            ? "Actualizar reconocimiento facial"
+            : "Registrar reconocimiento facial";
     }
 
     private async Task RegisterBiometricAsync()
@@ -88,37 +100,78 @@ public class SecurityViewModel : BaseViewModel
             IsBusy = true;
             Message = string.Empty;
 
-            var availability = await _biometricService.GetAvailabilityAsync();
-            if (!availability.IsAvailable)
+            var imageBytes = await FacialCameraCapture.CaptureAsync();
+            if (imageBytes is null)
             {
-                Message = "La biometria no esta disponible en este dispositivo.";
+                Message = "Se canceló la captura facial.";
                 return;
             }
 
-            var biometricResult = await _biometricService.AuthenticateAsync("BakeryPay", "Autoriza el registro biometrico");
-            if (!biometricResult.Success)
-            {
-                Message = biometricResult.Message;
-                return;
-            }
-
-            var deviceId = await _deviceInstallationService.GetOrCreateDeviceIdAsync();
-            var response = await _authApiService.RegisterBiometricAsync(
-                deviceId,
-                DeviceInfo.Current.Model,
-                DeviceInfo.Current.Platform.ToString(),
-                (int)availability.BiometricType);
+            var response = await _authApiService.RegisterFacialAsync(Convert.ToBase64String(imageBytes));
 
             if (response?.Success != true || response.Data is null)
             {
-                Message = response?.Message ?? "No fue posible registrar la biometria.";
+                Message = response?.Message ?? "No fue posible registrar el reconocimiento facial.";
                 return;
             }
 
             await _sessionStorageService.SaveSessionAsync(response.Data);
             IsBiometricRegistered = true;
-            BiometricStatus = $"{availability.DisplayName} registrada correctamente";
-            Message = "Biometria habilitada para futuros ingresos.";
+            FacialActionText = "Actualizar reconocimiento facial";
+            BiometricStatus = "Reconocimiento facial registrado correctamente";
+            Message = "Reconocimiento facial habilitado para futuros ingresos.";
+        }
+        catch (Exception ex)
+        {
+            Message = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private async Task RegisterDeviceBiometricAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            Message = string.Empty;
+
+            var availability = await _biometricService.GetAvailabilityAsync();
+            if (!availability.IsAvailable)
+            {
+                Message = "No hay una huella fuerte configurada. Registrala primero en los ajustes de Android.";
+                return;
+            }
+
+            var authentication = await _biometricService.AuthenticateAsync(
+                "Registrar huella en BakeryPay",
+                "Confirma tu huella para vincular este dispositivo.");
+            if (!authentication.Success)
+            {
+                Message = authentication.Message;
+                return;
+            }
+
+            var deviceId = await _deviceInstallationService.GetOrCreateDeviceIdAsync();
+            var deviceSecret = await _deviceInstallationService.GetOrCreateDeviceSecretAsync();
+            var response = await _authApiService.RegisterBiometricAsync(
+                deviceId,
+                DeviceInfo.Current.Name,
+                DeviceInfo.Current.Platform.ToString(),
+                deviceSecret,
+                (int)Models.BiometricTypeOption.Fingerprint);
+            if (response?.Success != true || response.Data is null)
+            {
+                Message = response?.Message ?? "No fue posible vincular la huella del dispositivo.";
+                return;
+            }
+
+            await _sessionStorageService.SaveSessionAsync(response.Data);
+            IsBiometricRegistered = true;
+            BiometricStatus = "Huella del dispositivo registrada correctamente";
+            Message = "El sensor confirmo la huella y el dispositivo quedo vinculado.";
         }
         catch (Exception ex)
         {

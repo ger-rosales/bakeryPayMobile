@@ -8,18 +8,23 @@
             <VerticalStackLayout Padding="20,18,20,34" Spacing="18">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Proveedores" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Proveedores"
+                               AutomationId="ProvidersTitle"
+                               Style="{StaticResource SectionTitleLabel}" />
                         <Label Text="Administra proveedores, contactos y credenciales de acceso."
                                Style="{StaticResource SectionSubtitleLabel}" />
                     </VerticalStackLayout>
                     <Button Grid.Column="1"
+                            AutomationId="OpenProviderFormButton"
                             Text="+ Crear"
                             Style="{StaticResource PrimaryAccentButtonStyle}"
                             IsVisible="{Binding CanManageProviders}"
                             Command="{Binding OpenCreateModalCommand}" />
                 </Grid>
 
-                <Label Text="{Binding Message}" TextColor="{StaticResource PrimaryDark}" />
+                <Label Text="{Binding Message}"
+                       AutomationId="ProviderResultMessage"
+                       TextColor="{StaticResource PrimaryDark}" />
                 <Label Text="{Binding LastCredentials}" TextColor="{StaticResource Success}" LineBreakMode="WordWrap" />
 
                 <CollectionView ItemsSource="{Binding Providers}">
@@ -102,6 +107,7 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Entry Placeholder="PRV-003"
+                               AutomationId="ProviderCodeEntry"
                                Text="{Binding Code}"
                                IsVisible="{Binding IsCreateMode}" />
 
@@ -111,6 +117,7 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Entry Placeholder="Nombre del proveedor"
+                               AutomationId="ProviderBusinessNameEntry"
                                Text="{Binding BusinessName}"
                                IsVisible="{Binding IsCreateMode}" />
 
@@ -118,19 +125,19 @@
                             <Label Text="RUC" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="0999999999003" Keyboard="Numeric" Text="{Binding TaxId}" />
+                        <Entry Placeholder="0999999999003" AutomationId="ProviderTaxIdEntry" Keyboard="Numeric" Text="{Binding TaxId}" />
 
                         <HorizontalStackLayout Spacing="0">
                             <Label Text="Nombres del contacto" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="Nombres" Text="{Binding ContactFirstName}" />
+                        <Entry Placeholder="Nombres" AutomationId="ProviderFirstNameEntry" Text="{Binding ContactFirstName}" />
 
                         <HorizontalStackLayout Spacing="0">
                             <Label Text="Apellidos del contacto" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="Apellidos" Text="{Binding ContactLastName}" />
+                        <Entry Placeholder="Apellidos" AutomationId="ProviderLastNameEntry" Text="{Binding ContactLastName}" />
 
                         <HorizontalStackLayout Spacing="0"
                                                IsVisible="{Binding IsCreateMode}">
@@ -138,6 +145,7 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Entry Placeholder="Cedula o identificacion"
+                               AutomationId="ProviderIdentificationEntry"
                                Text="{Binding ContactIdentificationNumber}"
                                IsVisible="{Binding IsCreateMode}" />
 
@@ -145,10 +153,10 @@
                             <Label Text="Correo del contacto" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="correo@proveedor.com" Keyboard="Email" Text="{Binding ContactEmail}" />
+                        <Entry Placeholder="correo@proveedor.com" AutomationId="ProviderEmailEntry" Keyboard="Email" Text="{Binding ContactEmail}" />
 
                         <Label Text="Telefono del contacto" FontAttributes="Bold" />
-                        <Entry Placeholder="0991234567" Keyboard="Telephone" Text="{Binding ContactPhone}" />
+                        <Entry Placeholder="0991234567" AutomationId="ProviderPhoneEntry" Keyboard="Telephone" Text="{Binding ContactPhone}" />
 
                         <Label Text="{Binding Message}" TextColor="{StaticResource PrimaryDark}" />
                         <Label Text="* Campo obligatorio"
@@ -156,6 +164,7 @@
                                TextColor="{StaticResource Danger}" />
 
                         <Button Text="Crear proveedor"
+                                AutomationId="CreateProviderButton"
                                 Style="{StaticResource PrimaryAccentButtonStyle}"
                                 Command="{Binding CreateProviderCommand}"
                                 IsVisible="{Binding IsCreateMode}" />

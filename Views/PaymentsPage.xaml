@@ -8,11 +8,14 @@
             <VerticalStackLayout Padding="20,18,20,34" Spacing="18">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Pagos" Style="{StaticResource SectionTitleLabel}" />
+                        <Label Text="Pagos"
+                               AutomationId="PaymentsTitle"
+                               Style="{StaticResource SectionTitleLabel}" />
                         <Label Text="Gestiona pagos, historial y movimientos recientes."
                                Style="{StaticResource SectionSubtitleLabel}" />
                     </VerticalStackLayout>
                     <Button Grid.Column="1"
+                            AutomationId="OpenPaymentFormButton"
                             Text="+ Nuevo"
                             Style="{StaticResource PrimaryAccentButtonStyle}"
                             IsVisible="{Binding IsInternalRole}"
@@ -65,6 +68,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
                 <Label Text="{Binding Message}"
+                       AutomationId="PaymentResultMessage"
                        TextColor="{StaticResource PrimaryDark}" />
             </VerticalStackLayout>
         </ScrollView>
@@ -96,6 +100,7 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Picker Title="Selecciona un proveedor"
+                                AutomationId="PaymentProviderPicker"
                                 ItemsSource="{Binding Providers}"
                                 ItemDisplayBinding="{Binding BusinessName}"
                                 SelectedItem="{Binding SelectedProvider}" />
@@ -104,13 +109,13 @@
                             <Label Text="Monto" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="0.00" Keyboard="Numeric" Text="{Binding Amount}" />
+                        <Entry Placeholder="0.00" AutomationId="PaymentAmountEntry" Keyboard="Numeric" Text="{Binding Amount}" />
 
                         <HorizontalStackLayout Spacing="0">
                             <Label Text="Moneda" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="USD" Text="{Binding Currency}" />
+                        <Entry Placeholder="USD" AutomationId="PaymentCurrencyEntry" Text="{Binding Currency}" />
 
                         <HorizontalStackLayout Spacing="0">
                             <Label Text="Fecha de pago" FontAttributes="Bold" />
@@ -122,13 +127,14 @@
                             <Label Text="Referencia" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
-                        <Entry Placeholder="TRX-2026-0003" Text="{Binding ReferenceNumber}" />
+                        <Entry Placeholder="TRX-2026-0003" AutomationId="PaymentReferenceEntry" Text="{Binding ReferenceNumber}" />
 
                         <HorizontalStackLayout Spacing="0">
                             <Label Text="Estado inicial" FontAttributes="Bold" />
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Picker Title="Selecciona un estado"
+                                AutomationId="PaymentStatusPicker"
                                 ItemsSource="{Binding PaymentStatuses}"
                                 ItemDisplayBinding="{Binding Label}"
                                 SelectedItem="{Binding SelectedStatus}" />
@@ -142,6 +148,7 @@
                                TextColor="{StaticResource Danger}" />
 
                         <Button Text="Guardar pago"
+                                AutomationId="CreatePaymentButton"
                                 Style="{StaticResource PrimaryAccentButtonStyle}"
                                 Command="{Binding CreatePaymentCommand}" />
                     </VerticalStackLayout>

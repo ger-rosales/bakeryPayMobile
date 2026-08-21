@@ -6,7 +6,9 @@
     <ScrollView>
         <VerticalStackLayout Padding="20,18,20,34" Spacing="18">
             <VerticalStackLayout Spacing="4">
-                <Label Text="Dashboard" Style="{StaticResource SectionTitleLabel}" />
+                <Label Text="Dashboard"
+                       AutomationId="DashboardTitle"
+                       Style="{StaticResource SectionTitleLabel}" />
                 <Label Text="Resumen de tu actividad financiera y accesos rapidos."
                        Style="{StaticResource SectionSubtitleLabel}" />
             </VerticalStackLayout>
@@ -67,6 +69,7 @@
                             </VerticalStackLayout>
                         </Grid>
                         <Button Text="Abrir proveedores"
+                                AutomationId="OpenProvidersButton"
                                 Style="{StaticResource SecondaryButtonStyle}"
                                 Command="{Binding OpenProvidersCommand}" />
                     </VerticalStackLayout>

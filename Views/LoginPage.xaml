@@ -24,7 +24,7 @@
                         <Label Text="Plataforma de Pagos"
                                Style="{StaticResource HeadlineLabel}"
                                HorizontalTextAlignment="Center" />
-                        <Label Text="Ingresa con tu correo o usa autenticacion biometrica."
+                        <Label Text="Ingresa con tu correo, huella o reconocimiento facial."
                                Style="{StaticResource SectionSubtitleLabel}"
                                HorizontalTextAlignment="Center" />
                     </VerticalStackLayout>
@@ -35,6 +35,7 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Entry Placeholder="tu@email.com"
+                               AutomationId="LoginEmailEntry"
                                Keyboard="Email"
                                Text="{Binding Email}" />
                     </VerticalStackLayout>
@@ -45,11 +46,13 @@
                             <Label Style="{StaticResource RequiredAsteriskLabel}" />
                         </HorizontalStackLayout>
                         <Entry Placeholder="********"
+                               AutomationId="LoginPasswordEntry"
                                IsPassword="True"
                                Text="{Binding Password}" />
                     </VerticalStackLayout>
 
                     <Button Text="Iniciar sesion"
+                            AutomationId="LoginButton"
                             Command="{Binding LoginCommand}" />
 
                     <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12" Margin="0,8,0,0">
@@ -66,7 +69,13 @@
                                  VerticalOptions="Center" />
                     </Grid>
 
-                    <Button Text="Autenticacion biometrica"
+                    <Button Text="Ingresar con huella"
+                            AutomationId="FingerprintLoginButton"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{Binding FingerprintLoginCommand}" />
+
+                    <Button Text="Autenticacion facial"
+                            AutomationId="FacialLoginButton"
                             Style="{StaticResource SecondaryButtonStyle}"
                             Command="{Binding BiometricLoginCommand}" />
 
@@ -75,7 +84,9 @@
                             Command="{Binding OpenCashierRegistrationCommand}" />
 
                     <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
-                    <Label Text="{Binding Message}" TextColor="{StaticResource PrimaryDark}" />
+                    <Label Text="{Binding Message}"
+                           AutomationId="LoginMessageLabel"
+                           TextColor="{StaticResource PrimaryDark}" />
                 </VerticalStackLayout>
             </Frame>
 

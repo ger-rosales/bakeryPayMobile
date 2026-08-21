@@ -28,6 +28,7 @@ public class LoginViewModel : BaseViewModel
         Title = "Ingreso seguro";
         LoginCommand = new AsyncCommand(LoginAsync);
         BiometricLoginCommand = new AsyncCommand(BiometricLoginAsync);
+        FingerprintLoginCommand = new AsyncCommand(FingerprintLoginAsync);
         OpenCashierRegistrationCommand = new AsyncCommand(OpenCashierRegistrationAsync);
     }
 
@@ -51,6 +52,7 @@ public class LoginViewModel : BaseViewModel
 
     public AsyncCommand LoginCommand { get; }
     public AsyncCommand BiometricLoginCommand { get; }
+    public AsyncCommand FingerprintLoginCommand { get; }
     public AsyncCommand OpenCashierRegistrationCommand { get; }
 
     private async Task LoginAsync()
@@ -98,29 +100,21 @@ public class LoginViewModel : BaseViewModel
 
             if (string.IsNullOrWhiteSpace(Email))
             {
-                Message = "Ingresa tu correo para validar el usuario biometrico.";
+                Message = "Ingresa tu correo para validar el usuario facial.";
                 return;
             }
 
-            var availability = await _biometricService.GetAvailabilityAsync();
-            if (!availability.IsAvailable)
+            var imageBytes = await FacialCameraCapture.CaptureAsync();
+            if (imageBytes is null)
             {
-                Message = "La biometria no esta disponible en este dispositivo.";
+                Message = "Se canceló la captura facial.";
                 return;
             }
 
-            var biometricResult = await _biometricService.AuthenticateAsync("BakeryPay", "Confirma tu identidad");
-            if (!biometricResult.Success)
-            {
-                Message = biometricResult.Message;
-                return;
-            }
-
-            var deviceId = await _deviceInstallationService.GetOrCreateDeviceIdAsync();
-            var response = await _authApiService.BiometricLoginAsync(Email, deviceId, (int)availability.BiometricType);
+            var response = await _authApiService.FacialLoginAsync(Email, Convert.ToBase64String(imageBytes));
             if (response?.Success != true || response.Data is null)
             {
-                Message = response?.Message ?? "No fue posible iniciar sesion con biometria.";
+                Message = response?.Message ?? "No fue posible iniciar sesion con reconocimiento facial.";
                 return;
             }
 
@@ -141,4 +135,62 @@ public class LoginViewModel : BaseViewModel
     }
 
     private Task OpenCashierRegistrationAsync() => Shell.Current.GoToAsync("//register-cashier");
+
+    private async Task FingerprintLoginAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            Message = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                Message = "Ingresa tu correo para identificar la cuenta vinculada.";
+                return;
+            }
+
+            var availability = await _biometricService.GetAvailabilityAsync();
+            if (!availability.IsAvailable)
+            {
+                Message = "No hay una huella fuerte configurada en este dispositivo.";
+                return;
+            }
+
+            var authentication = await _biometricService.AuthenticateAsync(
+                "Ingresar con huella",
+                "Confirma tu identidad para ingresar a BakeryPay.");
+            if (!authentication.Success)
+            {
+                Message = authentication.Message;
+                return;
+            }
+
+            var deviceId = await _deviceInstallationService.GetOrCreateDeviceIdAsync();
+            var deviceSecret = await _deviceInstallationService.GetOrCreateDeviceSecretAsync();
+            var response = await _authApiService.BiometricLoginAsync(
+                Email.Trim(),
+                deviceId,
+                deviceSecret,
+                (int)Models.BiometricTypeOption.Fingerprint);
+            if (response?.Success != true || response.Data is null)
+            {
+                Message = response?.Message ?? "Este dispositivo no tiene una huella vinculada.";
+                return;
+            }
+
+            await _sessionStorageService.SaveSessionAsync(response.Data);
+            if (Shell.Current is AppShell shell)
+            {
+                await shell.RefreshNavigationAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Message = ex.Message;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
 }
